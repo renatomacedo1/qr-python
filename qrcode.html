@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner and Generator</title>
+</head>
+<body>
+    <h1>QR Code Scanner and Generator</h1>
+
+    <!-- Div para exibir o vídeo da webcam -->
+    <div id="video-container">
+        <video id="video" playsinline autoplay></video>
+    </div>
+
+    <!-- Botão para iniciar a leitura de QR code -->
+    <button onclick="startScanner()">Start Scanner</button>
+
+    <!-- Div para exibir o resultado da leitura do QR code -->
+    <div id="result"></div>
+
+    <!-- Caixa de texto para inserir texto para gerar QR code -->
+    <textarea id="text-input" placeholder="Insira o texto para gerar QR code"></textarea>
+
+    <!-- Botão para gerar QR code -->
+    <button onclick="generateQRCode()">Generate QR Code</button>
+
+    <!-- Div para exibir o QR code gerado -->
+    <div id="qrcode"></div>
+
+    <script src="https://rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script>
+        // Função para iniciar a leitura de QR code
+        function startScanner() {
+            const video = document.getElementById('video');
+            const qrResult = document.getElementById('result');
+
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+                .then(stream => {
+                    video.srcObject = stream;
+                    const qrReader = new window.qrcode(video, handleQRCode);
+                })
+                .catch(err => console.error('Erro ao acessar a webcam:', err));
+        }
+
+        // Função de callback para processar o QR code lido
+        function handleQRCode(result) {
+            const qrResult = document.getElementById('result');
+            qrResult.textContent = 'QR Code lido: ' + result;
+        }
+
+        // Função para gerar QR code a partir do texto inserido
+        function generateQRCode() {
+            const text = document.getElementById('text-input').value;
+            const qrcode = new window.QRCode(document.getElementById('qrcode'), text);
+        }
+    </script>
+</body>
+</html>
